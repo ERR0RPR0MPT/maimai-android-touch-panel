@@ -167,7 +167,7 @@ def getevent():
 
     # 执行 adb shell getevent 命令并捕获输出
     process = subprocess.Popen(['adb', 'shell', 'getevent', '-l'], stdout=subprocess.PIPE)
-    key_is_changed = False
+    # key_is_changed = False
 
     # 读取实时输出
     for line in iter(process.stdout.readline, b''):
@@ -175,27 +175,27 @@ def getevent():
             event = line.decode('utf-8').strip()
             _, _, event_type, event_value = event.split()
             if event_type == 'ABS_MT_POSITION_X':
-                key_is_changed = True
+                # key_is_changed = True
                 touch_data[touch_index]["x"] = int(event_value, 16)
             elif event_type == 'ABS_MT_POSITION_Y':
-                key_is_changed = True
+                # key_is_changed = True
                 touch_data[touch_index]["y"] = int(event_value, 16)
             elif event_type == 'SYN_REPORT':
-                if not key_is_changed:
-                    continue
+                # if not key_is_changed:
+                #     continue
                 # print("Touch Data:", touch_data)
                 # 向 convert 函数发送数据
-                key_is_changed = False
+                # key_is_changed = False
                 start_time = time.time()
                 convert(touch_data)
                 # print(f"代码执行时间：{time.time() - start_time}秒")
             elif event_type == 'ABS_MT_SLOT':
-                key_is_changed = True
+                # key_is_changed = True
                 touch_index = int(event_value, 16)
                 if touch_index >= touch_sum:
                     touch_sum = touch_index + 1
             elif event_type == 'ABS_MT_TRACKING_ID':
-                key_is_changed = True
+                # key_is_changed = True
                 if event_value == "ffffffff":
                     touch_data[touch_index]['p'] = False
                     touch_sum -= 1
