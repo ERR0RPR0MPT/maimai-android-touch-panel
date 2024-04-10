@@ -6,7 +6,9 @@ import threading
 import queue
 import serial
 
-max_slot = 12
+COM_PORT = "COM33"
+COM_BAUDRATE = 115200
+MAX_SLOT = 12
 
 exp_image = Image.open("./image_monitor.png")
 exp_image_width, exp_image_height = exp_image.size
@@ -30,7 +32,7 @@ exp_image_dict = {
 
 
 class SerialManager:
-    p1Serial = serial.Serial("COM33", 9600)
+    p1Serial = serial.Serial(COM_PORT, COM_BAUDRATE)
     # p2Serial = serial.Serial("COM44", 9600)
     settingPacket = bytearray([40, 0, 0, 0, 0, 41])
     startUp = False
@@ -38,6 +40,7 @@ class SerialManager:
 
     def __init__(self):
         self.touchQueue = queue.Queue()
+        self.data_lock = threading.Lock()
         self.touchThread = threading.Thread(target=self.touch_thread)
         self.writeThread = threading.Thread(target=self.write_thread)
         self.now_touch_data = b''
@@ -50,7 +53,7 @@ class SerialManager:
         self.writeThread.start()
 
     def ping_touch_thread(self):
-        self.touchQueue.put([True, self.build_touch_package(exp_list), []])
+        self.touchQueue.put([self.build_touch_package(exp_list), []])
 
     def touch_thread(self):
         while True:
@@ -70,12 +73,14 @@ class SerialManager:
     def write_thread(self):
         while True:
             # 延迟匹配波特率
-            time.sleep(0.0075)
+            # time.sleep(0.01)  # 9600
+            time.sleep(0.002)  # 115200
             if not self.startUp:
                 # print("当前没有启动")
                 continue
             # print(self.now_touch_data)
-            self.send_touch(self.p1Serial, self.now_touch_data)
+            with self.data_lock:
+                self.send_touch(self.p1Serial, self.now_touch_data)
 
     def destroy(self):
         self.touchThread.join()
@@ -119,15 +124,16 @@ class SerialManager:
         # if not self.startUp:
         #     print("当前没有启动")
         #     return
-        if s_temp[0]:
-            self.now_touch_data = s_temp[1]
-            self.now_touch_keys = s_temp[2]
-            print("Touch Keys:", s_temp[2])
+        with self.data_lock:
+            self.now_touch_data = s_temp[0]
+            self.send_touch(self.p1Serial, s_temp[0])
+            self.now_touch_keys = s_temp[1]
+        print("Touch Keys:", s_temp[1])
         # else:
-        #     self.send_touch(self.p2Serial, s_temp[1])
+        #     self.send_touch(self.p2Serial, s_temp[0])
 
-    def change_touch(self, is_p1, sl, touch_keys):
-        self.touchQueue.put([is_p1, self.build_touch_package(sl), touch_keys])
+    def change_touch(self, sl, touch_keys):
+        self.touchQueue.put([self.build_touch_package(sl), touch_keys])
 
 
 def convert(touch_data):
@@ -154,12 +160,12 @@ def convert(touch_data):
             else:
                 copy_exp_list[i][j] = 0
     # print(copy_exp_list)
-    serial_manager.change_touch(True, copy_exp_list, touch_keys)
+    serial_manager.change_touch(copy_exp_list, touch_keys)
 
 
 def getevent():
     # 存储多点触控数据的列表
-    touch_data = [{"p": False, "x": 0, "y": 0} for _ in range(max_slot)]
+    touch_data = [{"p": False, "x": 0, "y": 0} for _ in range(MAX_SLOT)]
     # 记录当前按下的触控点数目
     touch_sum = 0
     # 记录当前选择的 SLOT 作为索引
