@@ -13,7 +13,7 @@ COM_BAUDRATE = 9600
 # Android 多点触控数量
 MAX_SLOT = 12
 # 检测区域的像素值范围
-AREA_SCOPE = 85
+AREA_SCOPE = 65
 
 exp_image = Image.open("./image_monitor.png")
 exp_image_width, exp_image_height = exp_image.size
@@ -154,15 +154,18 @@ def get_colors_in_area(x, y):
 def convert(touch_data):
     copy_exp_list = copy.deepcopy(exp_list)
     touch_keys = set()
+    touched = 0
     for i in touch_data:
         if not i["p"]:
             continue
+        touched += 1
         x = i["x"]
         y = i["y"]
         for r_str in get_colors_in_area(x, y):
             if not r_str in exp_image_dict:
                 continue
             touch_keys.add(exp_image_dict[r_str])
+    # print("Touched:", touched)
     # print("Touch Keys:", touch_keys)
     touch_keys_list = list(touch_keys)
     for i in range(len(copy_exp_list)):
