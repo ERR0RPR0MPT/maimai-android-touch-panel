@@ -74,7 +74,7 @@ class SerialManager:
         while True:
             # 延迟匹配波特率
             # time.sleep(0.01)  # 9600
-            time.sleep(0.002)  # 115200
+            time.sleep(0.002)  # 115200ccccccccccxxccccccccxxxxxxxxxxxcccxxxxxxxccccccccccccddddddddddcdddcccdcddddddcccccc
             if not self.startUp:
                 # print("当前没有启动")
                 continue
