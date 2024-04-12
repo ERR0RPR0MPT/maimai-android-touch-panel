@@ -18,6 +18,8 @@
 11. 如果单点延迟低但滑动时延迟变高, 请将脚本中 `TOUCH_THREAD_SLEEP_MODE` 修改为 False, 
 或者可以调小 `TOUCH_THREAD_SLEEP_DELAY` 的值
 
+游戏时如果不小心断开连接, 请在控制台输入 `start` 并回车来重新连接游戏
+
 ## 注意
 
 想要加 2P 的重新复制一下脚本并添加串口 COM4 到 COM44 的转发就好

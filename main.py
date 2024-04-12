@@ -105,8 +105,8 @@ class SerialManager:
                 self.settingPacket[i] = ord(data[i])
             ser.write(self.settingPacket)
         elif byte_data == 65:
-            print("已连接到游戏")
             self.startUp = True
+            print("已连接到游戏")
 
     def send_touch(self, ser, data):
         ser.write(data)
@@ -268,4 +268,11 @@ exp_image_width, exp_image_height = exp_image.size
 if __name__ == "__main__":
     serial_manager = SerialManager()
     serial_manager.start()
-    getevent()
+    threading.Thread(target=getevent).start()
+    while True:
+        input_str = input()
+        if input_str == 'start':
+            serial_manager.startUp = True
+            print("已连接到游戏")
+        else:
+            print("未知的输入")
