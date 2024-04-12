@@ -9,12 +9,13 @@
 2. 编辑 `main.py` 脚本文件, 修改脚本内 `exp_image_dict` 变量, 将各区块对应的 R 通道颜色值改为刚P的图的对应区块颜色值(一般不用改默认就行)
 3. 编辑 `main.py` 脚本文件, 修改脚本内 `COM_PORT`, `COM_BAUDRATE`, `MAX_SLOT` 三个配置
 4. 下一个 `VSPD` 虚拟串口工具, 将 `COM3` 和 `COM33` 建立转发
-5. 手机打开 USB 调试, 强烈建议同时使用 USB 网络共享连接电脑, 串流走 WLAN 可能不是很稳定
-6. 电脑画面可使用 `IddSampleDriver`, `Sunshine` 和 `Moonlight` 等串流到 Android 设备, 这里不再赘述
-7. 手机连接电脑, 先运行脚本 `python main.py`, 再运行游戏, 脚本控制台输出 `已连接到游戏` 即可
-8. 进游戏调整延迟, 一般判定A/B都要调才能正常用, 我这边是 `A:-1.0/B:0.5`
-9. 打一把看看蹭不蹭星星/触控是否灵敏, 根据体验修改 `AREA_SCOPE` 变量即可(默认65)
-10. 如果单点延迟低但滑动时延迟变高, 请将脚本中 `TOUCH_THREAD_SLEEP_MODE` 修改为 False, 
+5. 电脑安装 ADB 调试工具, 安装路径添加到系统环境变量里面
+6. 手机打开 USB 调试, 强烈建议同时使用 USB 网络共享连接电脑, 串流走 WLAN 可能不是很稳定
+7. 电脑画面可使用 `IddSampleDriver`, `Sunshine` 和 `Moonlight` 等串流到 Android 设备, 这里不再赘述
+8. 手机连接电脑, 先运行脚本 `python main.py`, 再运行游戏, 脚本控制台输出 `已连接到游戏` 即可
+9. 进游戏调整延迟, 一般判定A/B都要调才能正常用, 我这边是 `A:-1.0/B:0.5`
+10. 打一把看看蹭不蹭星星/触控是否灵敏, 根据体验修改 `AREA_SCOPE` 变量即可(默认65)
+11. 如果单点延迟低但滑动时延迟变高, 请将脚本中 `TOUCH_THREAD_SLEEP_MODE` 修改为 False, 
 或者可以调小 `TOUCH_THREAD_SLEEP_DELAY` 的值
 
 ## 注意
