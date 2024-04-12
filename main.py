@@ -14,6 +14,10 @@ COM_BAUDRATE = 9600
 MAX_SLOT = 12
 # 检测区域的像素值范围
 AREA_SCOPE = 65
+# touch_thread 是否启用sleep, 默认开启, 如果程序 CPU 占用较高则开启, 如果滑动时延迟极大请关闭
+TOUCH_THREAD_SLEEP_MODE = True
+# 每次 sleep 的延迟, 单位: 微秒, 默认 100 微秒
+TOUCH_THREAD_SLEEP_DELAY = 100
 
 exp_list = [
     ["A1", "A2", "A3", "A4", "A5", ],
@@ -35,7 +39,6 @@ exp_image_dict = {
 
 class SerialManager:
     p1Serial = serial.Serial(COM_PORT, COM_BAUDRATE)
-    # p2Serial = serial.Serial("COM44", 9600)
     settingPacket = bytearray([40, 0, 0, 0, 0, 41])
     startUp = False
     recvData = ""
@@ -59,23 +62,22 @@ class SerialManager:
 
     def touch_thread(self):
         while True:
-            # start_time = time.time()
+            # start_time = time.perf_counter()
             if self.p1Serial.is_open:
                 self.read_data(self.p1Serial)
-            # if self.p2Serial.is_open:
-            #     self.read_data(self.p2Serial)
             if not self.touchQueue.empty():
                 # print("touchQueue 不为空，开始执行")
                 s_temp = self.touchQueue.get()
                 self.update_touch(s_temp)
             # 延迟防止消耗 CPU 时间过长
-            time.sleep(0.0001)
-            # print(f"单次循环执行时间：{time.time() - start_time}秒")
+            if TOUCH_THREAD_SLEEP_MODE:
+                microsecond_sleep(TOUCH_THREAD_SLEEP_DELAY)
+            # print("单次执行时间:", (time.perf_counter() - start_time) * 1e3, "毫秒")
 
     def write_thread(self):
         while True:
             # 延迟匹配波特率
-            time.sleep(0.01)  # 9600
+            time.sleep(0.0075)  # 9600
             # time.sleep(0.002)  # 115200
             if not self.startUp:
                 # print("当前没有启动")
@@ -87,7 +89,6 @@ class SerialManager:
     def destroy(self):
         self.touchThread.join()
         self.p1Serial.close()
-        # self.p2Serial.close()
 
     def read_data(self, ser):
         if ser.in_waiting == 6:
@@ -110,16 +111,23 @@ class SerialManager:
     def send_touch(self, ser, data):
         ser.write(data)
 
+    # def build_touch_package(self, sl):
+    #     sum_list = [0, 0, 0, 0, 0, 0, 0]
+    #     for i in range(len(sl)):
+    #         for j in range(len(sl[i])):
+    #             if sl[i][j] == 1:
+    #                 sum_list[i] += (2 ** j)
+    #     s = "28 "
+    #     for i in sum_list:
+    #         s += hex(i)[2:].zfill(2).upper() + " "
+    #     s += "29"
+    #     # print(s)
+    #     return bytes.fromhex(s)
+
     def build_touch_package(self, sl):
-        sum_list = [0, 0, 0, 0, 0, 0, 0]
-        for i in range(len(sl)):
-            for j in range(len(sl[i])):
-                if sl[i][j] == 1:
-                    sum_list[i] += (2 ** j)
-        s = "28 "
-        for i in sum_list:
-            s += hex(i)[2:].zfill(2).upper() + " "
-        s += "29"
+        sum_list = [sum(2 ** j for j, val in enumerate(row) if val == 1) for row in sl]
+        hex_list = [hex(i)[2:].zfill(2).upper() for i in sum_list]
+        s = "28 " + " ".join(hex_list) + " 29"
         # print(s)
         return bytes.fromhex(s)
 
@@ -139,40 +147,65 @@ class SerialManager:
         self.touchQueue.put([self.build_touch_package(sl), touch_keys])
 
 
+def microsecond_sleep(sleep_time):
+    end_time = time.perf_counter() + (sleep_time - 1.0) / 1e6  # 1.0是时间补偿，需要根据自己PC的性能去实测
+    while time.perf_counter() < end_time:
+        pass
+
+
+# def get_colors_in_area(x, y):
+#     colors = set()  # 使用集合来存储颜色值，以避免重复
+#     for dx in [-AREA_SCOPE, 0, AREA_SCOPE]:
+#         for dy in [-AREA_SCOPE, 0, AREA_SCOPE]:
+#             if 0 <= (x + dx) < exp_image_width and 0 <= (y + dy) < exp_image_height:
+#                 colors.add(str(exp_image.getpixel((x + dx, y + dy))[0]))
+#     return list(colors)
+
+
 def get_colors_in_area(x, y):
-    colors = set()  # 使用集合来存储颜色值，以避免重复
-    for dx in [-AREA_SCOPE, 0, AREA_SCOPE]:
-        for dy in [-AREA_SCOPE, 0, AREA_SCOPE]:
-            if 0 <= (x + dx) < exp_image_width and 0 <= (y + dy) < exp_image_height:
-                colors.add(str(exp_image.getpixel((x + dx, y + dy))[0]))
+    colors = {str(exp_image.getpixel((x + dx, y + dy))[0]) for dx in [-AREA_SCOPE, 0, AREA_SCOPE] for dy in
+              [-AREA_SCOPE, 0, AREA_SCOPE] if 0 <= (x + dx) < exp_image_width and 0 <= (y + dy) < exp_image_height}
     return list(colors)
 
 
 def convert(touch_data):
     copy_exp_list = copy.deepcopy(exp_list)
-    touch_keys = set()
-    touched = 0
-    for i in touch_data:
-        if not i["p"]:
-            continue
-        touched += 1
-        x = i["x"]
-        y = i["y"]
-        for r_str in get_colors_in_area(x, y):
-            if not r_str in exp_image_dict:
-                continue
-            touch_keys.add(exp_image_dict[r_str])
-    # print("Touched:", touched)
+    touch_keys = {exp_image_dict[r_str] for i in touch_data if i["p"] for r_str in get_colors_in_area(i["x"], i["y"]) if
+                  r_str in exp_image_dict}
     # print("Touch Keys:", touch_keys)
+    # touched = sum(1 for i in touch_data if i["p"])
+    # print("Touched:", touched)
     touch_keys_list = list(touch_keys)
-    for i in range(len(copy_exp_list)):
-        for j in range(len(copy_exp_list[i])):
-            if copy_exp_list[i][j] in touch_keys_list:
-                copy_exp_list[i][j] = 1
-            else:
-                copy_exp_list[i][j] = 0
+    copy_exp_list = [[1 if item in touch_keys_list else 0 for item in sublist] for sublist in copy_exp_list]
     # print(copy_exp_list)
     serial_manager.change_touch(copy_exp_list, touch_keys_list)
+
+
+# def convert(touch_data):
+#     copy_exp_list = copy.deepcopy(exp_list)
+#     touch_keys = set()
+#     touched = 0
+#     for i in touch_data:
+#         if not i["p"]:
+#             continue
+#         touched += 1
+#         x = i["x"]
+#         y = i["y"]
+#         for r_str in get_colors_in_area(x, y):
+#             if not r_str in exp_image_dict:
+#                 continue
+#             touch_keys.add(exp_image_dict[r_str])
+#     # print("Touched:", touched)
+#     # print("Touch Keys:", touch_keys)
+#     touch_keys_list = list(touch_keys)
+#     for i in range(len(copy_exp_list)):
+#         for j in range(len(copy_exp_list[i])):
+#             if copy_exp_list[i][j] in touch_keys_list:
+#                 copy_exp_list[i][j] = 1
+#             else:
+#                 copy_exp_list[i][j] = 0
+#     # print(copy_exp_list)
+#     serial_manager.change_touch(copy_exp_list, touch_keys_list)
 
 
 def getevent():
@@ -204,9 +237,9 @@ def getevent():
                 # print("Touch Data:", touch_data)
                 # 向 convert 函数发送数据
                 key_is_changed = False
-                # start_time = time.time()
+                # start_time = time.perf_counter()
                 convert(touch_data)
-                # print(f"代码执行时间：{time.time() - start_time}秒")
+                # print("单次执行时间:", (time.perf_counter() - start_time) * 1e3, "毫秒")
             elif event_type == 'ABS_MT_SLOT':
                 key_is_changed = True
                 touch_index = int(event_value, 16)
@@ -216,9 +249,7 @@ def getevent():
                 key_is_changed = True
                 if event_value == "ffffffff":
                     touch_data[touch_index]['p'] = False
-                    touch_sum -= 1
-                    if touch_sum < 0:
-                        touch_sum = 0
+                    touch_sum = max(0, touch_sum - 1)
                 else:
                     touch_data[touch_index]['p'] = True
                     touch_sum += 1
