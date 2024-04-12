@@ -6,6 +6,8 @@ import threading
 import queue
 import serial
 
+# 编辑好的图片路径
+IMAGE_PATH = "./image/image_monitor.png"
 # 串口号
 COM_PORT = "COM33"
 # 比特率
@@ -262,7 +264,7 @@ def getevent():
             print(event_error_output)
 
 
-exp_image = Image.open("./image_monitor.png")
+exp_image = Image.open(IMAGE_PATH)
 exp_image_width, exp_image_height = exp_image.size
 
 if __name__ == "__main__":

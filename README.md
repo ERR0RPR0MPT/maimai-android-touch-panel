@@ -5,9 +5,9 @@
 ## 使用方法
 
 1. 打开任意P图工具, 准备一个和设备屏幕大小相同的一张图片(例如:1600x2560), 将 `./image/color_exp_panel.png`
-放置到该图片圆形触摸区域的位置(或者可以参考`./image/image_monitor_edit3.png`的做法), 编辑好的图片放到脚本目录下取名 `image_monitor.png`.
+放置到该图片圆形触摸区域的位置(或者可以参考`./image/image_monitor_edit3.png`的做法), 编辑好的图片放到脚本 `image` 目录下取名 `image_monitor.png`.
 2. 编辑 `main.py` 脚本文件, 修改脚本内 `exp_image_dict` 变量, 将各区块对应的 R 通道颜色值改为刚P的图的对应区块颜色值(一般不用改默认就行)
-3. 编辑 `main.py` 脚本文件, 修改脚本内 `COM_PORT`, `COM_BAUDRATE`, `MAX_SLOT` 三个配置
+3. 编辑 `main.py` 脚本文件, 修改脚本内 `IMAGE_PATH` `COM_PORT`, `COM_BAUDRATE`, `MAX_SLOT` 四个配置
 4. 下一个 `VSPD` 虚拟串口工具, 将 `COM3` 和 `COM33` 建立转发
 5. 电脑安装 ADB 调试工具, 安装路径添加到系统环境变量里面
 6. 手机打开 USB 调试, 强烈建议同时使用 USB 网络共享连接电脑, 串流走 WLAN 可能不是很稳定
