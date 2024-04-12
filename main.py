@@ -13,7 +13,7 @@ COM_BAUDRATE = 9600
 # Android 多点触控数量
 MAX_SLOT = 12
 # 检测区域的像素值范围
-AREA_SCOPE = 40
+AREA_SCOPE = 65
 
 exp_list = [
     ["A1", "A2", "A3", "A4", "A5", ],
