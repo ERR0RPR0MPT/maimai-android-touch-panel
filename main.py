@@ -13,10 +13,7 @@ COM_BAUDRATE = 9600
 # Android 多点触控数量
 MAX_SLOT = 12
 # 检测区域的像素值范围
-AREA_SCOPE = 65
-
-exp_image = Image.open("./image_monitor.png")
-exp_image_width, exp_image_height = exp_image.size
+AREA_SCOPE = 40
 
 exp_list = [
     ["A1", "A2", "A3", "A4", "A5", ],
@@ -71,7 +68,7 @@ class SerialManager:
                 # print("touchQueue 不为空，开始执行")
                 s_temp = self.touchQueue.get()
                 self.update_touch(s_temp)
-            # 延迟防止 CPU 时间过长
+            # 延迟防止消耗 CPU 时间过长
             time.sleep(0.0001)
             # print(f"单次循环执行时间：{time.time() - start_time}秒")
 
@@ -233,6 +230,9 @@ def getevent():
                 continue
             print(event_error_output)
 
+
+exp_image = Image.open("./image_monitor.png")
+exp_image_width, exp_image_height = exp_image.size
 
 if __name__ == "__main__":
     serial_manager = SerialManager()
