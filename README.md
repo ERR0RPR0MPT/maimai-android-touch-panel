@@ -25,6 +25,8 @@
 13. 如果单点延迟低但滑动时延迟变高, 请将脚本中 `TOUCH_THREAD_SLEEP_MODE` 修改为 false,
     或者可以调小 `TOUCH_THREAD_SLEEP_DELAY` 的值
 
+## 命令列表
+
 游戏时如果不小心断开连接, 请在控制台输入 `start` 并回车来重新连接游戏
 
 输入 `reverse` 可调整触控设备屏幕方向
