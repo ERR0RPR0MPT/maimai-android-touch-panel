@@ -252,7 +252,7 @@ def getevent():
     touch_index = 0
 
     # 执行 adb shell getevent 命令并捕获输出
-    process = subprocess.Popen(['adb', 'shell', 'getevent', '-l'], stdout=subprocess.PIPE)
+    process = subprocess.Popen(['adb', 'shell', 'getevent', '-l'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     key_is_changed = False
 
     # 读取实时输出
@@ -338,7 +338,9 @@ if __name__ == "__main__":
     serial_manager.start()
     threading.Thread(target=getevent).start()
     while True:
-        input_str = input()
+        input_str = input().strip()
+        if len(input_str) == 0:
+            continue
         if input_str == 'start':
             serial_manager.startUp = True
             print("已连接到游戏")
