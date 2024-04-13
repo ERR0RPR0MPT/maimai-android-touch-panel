@@ -4,3 +4,5 @@
 /app/
 /main_test.py
 /start_test.bat
+/start_wec.bat
+/config_wec.yaml
