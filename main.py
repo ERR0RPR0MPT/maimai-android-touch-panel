@@ -167,23 +167,6 @@ def microsecond_sleep(sleep_time):
         pass
 
 
-# 选择方形区域的9个点作为判定
-# def get_colors_in_area(x, y):
-#     colors = set()  # 使用集合来存储颜色值，以避免重复
-#     for dx in [-AREA_SCOPE, 0, AREA_SCOPE]:
-#         for dy in [-AREA_SCOPE, 0, AREA_SCOPE]:
-#             if 0 <= (x + dx) < exp_image_width and 0 <= (y + dy) < exp_image_height:
-#                 colors.add(str(exp_image.getpixel((x + dx, y + dy))[0]))
-#     return list(colors)
-
-
-# 优化代码执行效率
-# def get_colors_in_area(x, y):
-#     colors = {str(exp_image.getpixel((x + dx, y + dy))[0]) for dx in [-AREA_SCOPE, 0, AREA_SCOPE] for dy in
-#               [-AREA_SCOPE, 0, AREA_SCOPE] if 0 <= (x + dx) < exp_image_width and 0 <= (y + dy) < exp_image_height}
-#     return list(colors)
-
-
 # 选择圆形区域的9个点作为判定
 def get_colors_in_area(x, y):
     colors = set()  # 使用集合来存储颜色值，以避免重复
