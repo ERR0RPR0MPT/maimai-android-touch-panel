@@ -1,3 +1,5 @@
+import math
+
 from PIL import Image
 import subprocess
 import copy
@@ -15,7 +17,7 @@ COM_BAUDRATE = 9600
 # Android 多点触控数量
 MAX_SLOT = 12
 # 检测区域的像素值范围
-AREA_SCOPE = 65
+AREA_SCOPE = 50
 # Android 设备实际屏幕大小 (单位:像素)
 ANDROID_ABS_MONITOR_SIZE = (1600, 2560)
 # Android 设备触控屏幕大小 (单位:像素)
@@ -161,6 +163,7 @@ def microsecond_sleep(sleep_time):
         pass
 
 
+# 选择方形区域的9个点作为判定
 # def get_colors_in_area(x, y):
 #     colors = set()  # 使用集合来存储颜色值，以避免重复
 #     for dx in [-AREA_SCOPE, 0, AREA_SCOPE]:
@@ -170,9 +173,29 @@ def microsecond_sleep(sleep_time):
 #     return list(colors)
 
 
+# 优化代码执行效率
+# def get_colors_in_area(x, y):
+#     colors = {str(exp_image.getpixel((x + dx, y + dy))[0]) for dx in [-AREA_SCOPE, 0, AREA_SCOPE] for dy in
+#               [-AREA_SCOPE, 0, AREA_SCOPE] if 0 <= (x + dx) < exp_image_width and 0 <= (y + dy) < exp_image_height}
+#     return list(colors)
+
+
+# 选择圆形区域的9个点作为判定
 def get_colors_in_area(x, y):
-    colors = {str(exp_image.getpixel((x + dx, y + dy))[0]) for dx in [-AREA_SCOPE, 0, AREA_SCOPE] for dy in
-              [-AREA_SCOPE, 0, AREA_SCOPE] if 0 <= (x + dx) < exp_image_width and 0 <= (y + dy) < exp_image_height}
+    colors = set()  # 使用集合来存储颜色值，以避免重复
+    num_points = 24  # 要获取的点的数量
+    angle_increment = 360.0 / num_points  # 角度增量
+    cos_values = [math.cos(math.radians(i * angle_increment)) for i in range(num_points)]
+    sin_values = [math.sin(math.radians(i * angle_increment)) for i in range(num_points)]
+    for i in range(num_points):
+        dx = int(AREA_SCOPE * cos_values[i])
+        dy = int(AREA_SCOPE * sin_values[i])
+        px = x + dx
+        py = y + dy
+        if 0 <= px < exp_image_width and 0 <= py < exp_image_height:
+            pixel = exp_image.getpixel((px, py))
+            color = str(pixel[0])
+            colors.add(color)
     return list(colors)
 
 
