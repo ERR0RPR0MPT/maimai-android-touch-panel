@@ -28,10 +28,6 @@
 
 游戏时如果不小心断开连接, 请在控制台输入 `start` 并回车来重新连接游戏
 
-P区块图的成品类似这样:
-
-![](https://raw.githubusercontent.com/ERR0RPR0MPT/maimai-android-touch-panel/main/image/image_monitor.png)
-
 ## 部分问题
 
 Q: 在安卓高版本(13,14)上测试触摸区域完全对不上，只有点屏幕左上角有用，图片用的是平板实际分辨率，在一台安卓10设备测试是正常的
@@ -43,3 +39,9 @@ A: 按步骤修改脚本内 `ANDROID_ABS_MONITOR_SIZE` 和 `ANDROID_ABS_INPUT_SI
 想要加 2P 的重新复制一下脚本并添加串口 COM4 到 COM44 的转发就好
 
 该脚本仅用于测试, 目前来说打12+及以下应该是问题不大, 12+以上水平不够没试过.
+
+## 其他
+
+P区块图的成品类似这样:
+
+![](https://raw.githubusercontent.com/ERR0RPR0MPT/maimai-android-touch-panel/main/image/image_monitor.png)
