@@ -161,6 +161,12 @@ class SerialManager:
         self.touchQueue.put([self.build_touch_package(sl), touch_keys])
 
 
+def restart_script():
+    python = sys.executable
+    script = os.path.abspath(sys.argv[0])
+    os.execv(python, [python, script])
+
+
 def microsecond_sleep(sleep_time):
     end_time = time.perf_counter() + (sleep_time - 1.0) / 1e6  # 1.0是时间补偿，需要根据自己PC的性能去实测
     while time.perf_counter() < end_time:
@@ -339,5 +345,7 @@ if __name__ == "__main__":
         elif input_str == 'reverse':
             ANDROID_REVERSE_MONITOR = not ANDROID_REVERSE_MONITOR
             print("已" + ('开启' if ANDROID_REVERSE_MONITOR else '关闭') + "屏幕反转")
+        elif input_str == 'restart':
+            restart_script()
         else:
             print("未知的输入")
