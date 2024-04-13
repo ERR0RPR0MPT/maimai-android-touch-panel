@@ -8,7 +8,7 @@
 放置到该图片圆形触摸区域的位置(或者可以参考`./image/image_monitor_edit3.png`的做法), 编辑好的图片放到脚本 `image` 目录下取名 `image_monitor.png`.
 2. 编辑 `main.py` 脚本文件, 修改脚本内 `exp_image_dict` 变量, 将各区块对应的 R 通道颜色值改为刚P的图的对应区块颜色值(一般不用改默认就行)
 3. 编辑 `main.py` 脚本文件, 修改脚本内 `IMAGE_PATH` `COM_PORT`, `COM_BAUDRATE`, `MAX_SLOT` 四个配置
-4. 下一个 `VSPD` 虚拟串口工具, 将 `COM3` 和 `COM33` 建立转发
+4. 下一个 `VSPD` 或 `com0com` 虚拟串口工具, 将 `COM3` 和 `COM33` 建立转发
 5. 电脑安装 ADB 调试工具, 安装路径添加到系统环境变量里面
 6. 手机打开 USB 调试, 强烈建议同时使用 USB 网络共享连接电脑, 串流走 WLAN 可能不是很稳定
 7. 电脑画面可使用 `IddSampleDriver`, `Sunshine` 和 `Moonlight` 等串流到 Android 设备, 这里不再赘述
@@ -24,7 +24,7 @@
 
 Q: 在安卓高版本(13,14)上测试触摸区域完全对不上，只有点屏幕左上角有用，图片用的是平板实际分辨率，在一台安卓10设备测试是正常的
 
-A: 在控制台输入 `adb shell getevent -l` 然后在点一下触摸屏幕的左上角和右下角，找到 `ABS_MT_POSITION_X` 和 `ABS_MT_POSITION_Y` 对应的十六进制数值，转换为十进制后计算一下长宽的数值，重新生成一个对应长宽的图片就可以了
+A: 在脚本设置中修改 `USE_ANDROID_NEW_POSITION` 配置为 True
 
 ## 注意
 

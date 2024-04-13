@@ -16,6 +16,8 @@ COM_BAUDRATE = 9600
 MAX_SLOT = 12
 # 检测区域的像素值范围
 AREA_SCOPE = 65
+# 在部分 Android 设备上位置数据会精准到小数点后一位, 是否适配新版本位置数据, 默认不开启
+USE_ANDROID_NEW_POSITION = False
 # touch_thread 是否启用sleep, 默认开启, 如果程序 CPU 占用较高则开启, 如果滑动时延迟极大请关闭
 TOUCH_THREAD_SLEEP_MODE = True
 # 每次 sleep 的延迟, 单位: 微秒, 默认 100 微秒
@@ -229,10 +231,16 @@ def getevent():
             _, _, event_type, event_value = event.split()
             if event_type == 'ABS_MT_POSITION_X':
                 key_is_changed = True
-                touch_data[touch_index]["x"] = int(event_value, 16)
+                if USE_ANDROID_NEW_POSITION:
+                    touch_data[touch_index]["x"] = int(int(event_value, 16) / 10)
+                else:
+                    touch_data[touch_index]["x"] = int(event_value, 16)
             elif event_type == 'ABS_MT_POSITION_Y':
                 key_is_changed = True
-                touch_data[touch_index]["y"] = int(event_value, 16)
+                if USE_ANDROID_NEW_POSITION:
+                    touch_data[touch_index]["y"] = int(int(event_value, 16) / 10)
+                else:
+                    touch_data[touch_index]["y"] = int(event_value, 16)
             elif event_type == 'SYN_REPORT':
                 if not key_is_changed:
                     continue
