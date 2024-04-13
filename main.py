@@ -57,7 +57,7 @@ class SerialManager:
         self.ping_touch_thread()
 
     def start(self):
-        print("开始监听 COM33 串口...")
+        print(f"开始监听 {COM_PORT} 串口...")
         self.touchThread.start()
         self.writeThread.start()
 
