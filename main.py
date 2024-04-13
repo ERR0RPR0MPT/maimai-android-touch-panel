@@ -16,8 +16,12 @@ COM_BAUDRATE = 9600
 MAX_SLOT = 12
 # 检测区域的像素值范围
 AREA_SCOPE = 65
-# 在部分 Android 设备上位置数据会精准到小数点后一位, 是否适配新版本位置数据, 默认不开启
-USE_ANDROID_NEW_POSITION = False
+# Android 设备实际屏幕大小 (单位:像素)
+ANDROID_ABS_MONITOR_SIZE = (1600, 2560)
+# Android 设备触控屏幕大小 (单位:像素)
+ANDROID_ABS_INPUT_SIZE = (1600, 2560)
+# 是否开启屏幕反转(充电口朝上时开启该配置)
+ANDROID_REVERSE_MONITOR = False
 # touch_thread 是否启用sleep, 默认开启, 如果程序 CPU 占用较高则开启, 如果滑动时延迟极大请关闭
 TOUCH_THREAD_SLEEP_MODE = True
 # 每次 sleep 的延迟, 单位: 微秒, 默认 100 微秒
@@ -212,6 +216,11 @@ def convert(touch_data):
 #     serial_manager.change_touch(copy_exp_list, touch_keys_list)
 
 
+def calc_abs_x_y():
+    return (ANDROID_ABS_MONITOR_SIZE[0] / ANDROID_ABS_INPUT_SIZE[0] + ANDROID_ABS_MONITOR_SIZE[1] /
+            ANDROID_ABS_INPUT_SIZE[1]) / 2
+
+
 def getevent():
     # 存储多点触控数据的列表
     touch_data = [{"p": False, "x": 0, "y": 0} for _ in range(MAX_SLOT)]
@@ -231,16 +240,16 @@ def getevent():
             _, _, event_type, event_value = event.split()
             if event_type == 'ABS_MT_POSITION_X':
                 key_is_changed = True
-                if USE_ANDROID_NEW_POSITION:
-                    touch_data[touch_index]["x"] = int(int(event_value, 16) / 10)
+                if not ANDROID_REVERSE_MONITOR:
+                    touch_data[touch_index]["x"] = int(int(event_value, 16) * abs_multi)
                 else:
-                    touch_data[touch_index]["x"] = int(event_value, 16)
+                    touch_data[touch_index]["x"] = ANDROID_ABS_MONITOR_SIZE[0] - int(int(event_value, 16) * abs_multi)
             elif event_type == 'ABS_MT_POSITION_Y':
                 key_is_changed = True
-                if USE_ANDROID_NEW_POSITION:
-                    touch_data[touch_index]["y"] = int(int(event_value, 16) / 10)
+                if not ANDROID_REVERSE_MONITOR:
+                    touch_data[touch_index]["y"] = int(int(event_value, 16) * abs_multi)
                 else:
-                    touch_data[touch_index]["y"] = int(event_value, 16)
+                    touch_data[touch_index]["y"] = ANDROID_ABS_MONITOR_SIZE[1] - int(int(event_value, 16) * abs_multi)
             elif event_type == 'SYN_REPORT':
                 if not key_is_changed:
                     continue
@@ -274,8 +283,12 @@ def getevent():
 
 exp_image = Image.open(IMAGE_PATH)
 exp_image_width, exp_image_height = exp_image.size
+abs_multi = 1
 
 if __name__ == "__main__":
+    abs_multi = calc_abs_x_y()
+    print("当前触控区域大小倍数:", abs_multi)
+    print(('已' if ANDROID_REVERSE_MONITOR else '未') + "开启屏幕反转")
     serial_manager = SerialManager()
     serial_manager.start()
     threading.Thread(target=getevent).start()
@@ -284,5 +297,8 @@ if __name__ == "__main__":
         if input_str == 'start':
             serial_manager.startUp = True
             print("已连接到游戏")
+        elif input_str == 'reverse':
+            ANDROID_REVERSE_MONITOR = not ANDROID_REVERSE_MONITOR
+            print("已" + ('开启' if ANDROID_REVERSE_MONITOR else '关闭') + "屏幕反转")
         else:
             print("未知的输入")
