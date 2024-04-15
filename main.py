@@ -238,11 +238,6 @@ def convert(touch_data):
 #     serial_manager.change_touch(copy_exp_list, touch_keys_list)
 
 
-def calc_abs_x_y():
-    return (ANDROID_ABS_MONITOR_SIZE[0] / ANDROID_ABS_INPUT_SIZE[0] + ANDROID_ABS_MONITOR_SIZE[1] /
-            ANDROID_ABS_INPUT_SIZE[1]) / 2
-
-
 def getevent():
     # 存储多点触控数据的列表
     touch_data = [{"p": False, "x": 0, "y": 0} for _ in range(MAX_SLOT)]
