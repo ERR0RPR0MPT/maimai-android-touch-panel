@@ -200,8 +200,8 @@ def get_color_name(pixel):
 
 def convert(touch_data):
     copy_exp_list = copy.deepcopy(exp_list)
-    touch_keys = {exp_image_dict[r_str] for i in touch_data if i["p"] for r_str in get_colors_in_area(i["x"], i["y"]) if
-                  r_str in exp_image_dict}
+    touch_keys = {exp_image_dict[rgb_str] for i in touch_data if i["p"] for rgb_str in get_colors_in_area(i["x"], i["y"]) if
+                  rgb_str in exp_image_dict}
     # print("Touch Keys:", touch_keys)
     # touched = sum(1 for i in touch_data if i["p"])
     # print("Touched:", touched)
@@ -221,10 +221,10 @@ def convert(touch_data):
 #         touched += 1
 #         x = i["x"]
 #         y = i["y"]
-#         for r_str in get_colors_in_area(x, y):
-#             if not r_str in exp_image_dict:
+#         for rgb_str in get_colors_in_area(x, y):
+#             if not rgb_str in exp_image_dict:
 #                 continue
-#             touch_keys.add(exp_image_dict[r_str])
+#             touch_keys.add(exp_image_dict[rgb_str])
 #     # print("Touched:", touched)
 #     # print("Touch Keys:", touch_keys)
 #     touch_keys_list = list(touch_keys)
