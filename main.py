@@ -264,15 +264,15 @@ def getevent():
             if event_type == 'ABS_MT_POSITION_X':
                 key_is_changed = True
                 if not ANDROID_REVERSE_MONITOR:
-                    touch_data[touch_index]["x"] = int(int(event_value, 16) * abs_multi)
+                    touch_data[touch_index]["x"] = int(int(event_value, 16) * abs_multi_x)
                 else:
-                    touch_data[touch_index]["x"] = ANDROID_ABS_MONITOR_SIZE[0] - int(int(event_value, 16) * abs_multi)
+                    touch_data[touch_index]["x"] = ANDROID_ABS_MONITOR_SIZE[0] - int(int(event_value, 16) * abs_multi_x)
             elif event_type == 'ABS_MT_POSITION_Y':
                 key_is_changed = True
                 if not ANDROID_REVERSE_MONITOR:
-                    touch_data[touch_index]["y"] = int(int(event_value, 16) * abs_multi)
+                    touch_data[touch_index]["y"] = int(int(event_value, 16) * abs_multi_y)
                 else:
-                    touch_data[touch_index]["y"] = ANDROID_ABS_MONITOR_SIZE[1] - int(int(event_value, 16) * abs_multi)
+                    touch_data[touch_index]["y"] = ANDROID_ABS_MONITOR_SIZE[1] - int(int(event_value, 16) * abs_multi_y)
             elif event_type == 'SYN_REPORT':
                 if not key_is_changed:
                     continue
@@ -306,7 +306,8 @@ def getevent():
 
 exp_image = Image.open(IMAGE_PATH)
 exp_image_width, exp_image_height = exp_image.size
-abs_multi = 1
+abs_multi_x = 1
+abs_multi_y = 1
 
 if __name__ == "__main__":
     yaml_file_path = 'config.yaml'
@@ -331,8 +332,10 @@ if __name__ == "__main__":
     else:
         print("未找到配置文件, 使用默认配置")
 
-    abs_multi = calc_abs_x_y()
-    print("当前触控区域大小倍数:", abs_multi)
+    abs_multi_x = ANDROID_ABS_MONITOR_SIZE[0] / ANDROID_ABS_INPUT_SIZE[0]
+    abs_multi_y = ANDROID_ABS_MONITOR_SIZE[1] / ANDROID_ABS_INPUT_SIZE[1]
+    print("当前触控区域X轴放大倍数:", abs_multi_x)
+    print("当前触控区域Y轴放大倍数:", abs_multi_y)
     print(('已' if ANDROID_REVERSE_MONITOR else '未') + "开启屏幕反转")
     serial_manager = SerialManager()
     serial_manager.start()
