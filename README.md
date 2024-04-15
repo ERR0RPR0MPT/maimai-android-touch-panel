@@ -15,7 +15,7 @@
    在终端获取该次点击得到的 `ABS_MT_POSITION_X` 和 `ABS_MT_POSITION_Y` 的数值, 把十六进制转换到十进制,
    将得到的数据填入到 `ANDROID_ABS_INPUT_SIZE` 配置
 7. Android 设备充电口朝下一般为屏幕的正向, 如需反向屏幕游玩可将配置 `ANDROID_REVERSE_MONITOR` 改为 true
-8. 编辑 `config.yaml` 配置文件, 修改脚本内 `IMAGE_PATH` `COM_PORT`, `COM_BAUDRATE`, `MAX_SLOT` 四个配置
+8. 编辑 `config.yaml` 配置文件, 按文件内说明修改多个配置
 9. 下载一个 `VSPD` 虚拟串口工具, 将 `COM3` 和 `COM33` 建立转发
 10. 手机打开 USB 调试, 强烈建议同时使用 USB 网络共享连接电脑, 串流走 WLAN 可能不是很稳定
 11. 电脑画面可使用 `IddSampleDriver`, `Sunshine` 和 `Moonlight` (提一嘴:想要竖屏串流必须使用支持竖屏的 Sunshine Nightly
