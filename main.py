@@ -200,7 +200,8 @@ def get_color_name(pixel):
 
 def convert(touch_data):
     copy_exp_list = copy.deepcopy(exp_list)
-    touch_keys = {exp_image_dict[rgb_str] for i in touch_data if i["p"] for rgb_str in get_colors_in_area(i["x"], i["y"]) if
+    touch_keys = {exp_image_dict[rgb_str] for i in touch_data if i["p"] for rgb_str in
+                  get_colors_in_area(i["x"], i["y"]) if
                   rgb_str in exp_image_dict}
     # print("Touch Keys:", touch_keys)
     # touched = sum(1 for i in touch_data if i["p"])
@@ -299,11 +300,6 @@ def getevent():
             print(event_error_output)
 
 
-exp_image = Image.open(IMAGE_PATH)
-exp_image_width, exp_image_height = exp_image.size
-abs_multi_x = 1
-abs_multi_y = 1
-
 if __name__ == "__main__":
     yaml_file_path = 'config.yaml'
     if len(sys.argv) > 1:
@@ -327,6 +323,8 @@ if __name__ == "__main__":
     else:
         print("未找到配置文件, 使用默认配置")
 
+    exp_image = Image.open(IMAGE_PATH)
+    exp_image_width, exp_image_height = exp_image.size
     abs_multi_x = ANDROID_ABS_MONITOR_SIZE[0] / ANDROID_ABS_INPUT_SIZE[0]
     abs_multi_y = ANDROID_ABS_MONITOR_SIZE[1] / ANDROID_ABS_INPUT_SIZE[1]
     print("当前触控区域X轴放大倍数:", abs_multi_x)
