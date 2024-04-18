@@ -39,6 +39,8 @@
 
 ## 部分问题
 
+关于延迟/其他建议可参考 [#3](https://github.com/ERR0RPR0MPT/maimai-android-touch-panel/issues/3)
+
 Q: 在安卓高版本(13,14)上测试触摸区域完全对不上，只有点屏幕左上角有用，图片用的是平板实际分辨率，在一台安卓10设备测试是正常的
 
 A: 按步骤修改脚本内 `ANDROID_ABS_MONITOR_SIZE` 和 `ANDROID_ABS_INPUT_SIZE` 配置
