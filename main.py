@@ -90,9 +90,10 @@ class SerialManager:
 
     def write_thread(self):
         while True:
-            # 延迟匹配波特率
-            time.sleep(0.0075)  # 9600
-            # time.sleep(0.002)  # 115200
+            # # 延迟匹配波特率
+            # time.sleep(0.0075)  # 9600
+            # # time.sleep(0.002)  # 115200
+            time.sleep(0.000001)  # 避免延迟过大
             if not self.startUp:
                 # print("当前没有启动")
                 continue

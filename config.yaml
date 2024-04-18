@@ -16,8 +16,8 @@ ANDROID_ABS_MONITOR_SIZE: [ 1600, 2560 ]
 ANDROID_ABS_INPUT_SIZE: [ 1600, 2560 ]
 # 是否开启屏幕反转(充电口朝上时开启该配置)
 ANDROID_REVERSE_MONITOR: false
-# touch_thread 是否启用sleep, 默认开启, 如果程序 CPU 占用较高则开启, 如果滑动时延迟极大请关闭
-TOUCH_THREAD_SLEEP_MODE: true
+# touch_thread 是否启用sleep, 默认关闭, 如果程序 CPU 占用较高则开启, 如果滑动时延迟极大请关闭
+TOUCH_THREAD_SLEEP_MODE: false
 # 每次 sleep 的延迟, 单位: 微秒, 默认 100 微秒
 TOUCH_THREAD_SLEEP_DELAY: 100
 
