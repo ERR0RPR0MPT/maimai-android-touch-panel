@@ -199,7 +199,11 @@ def get_color_name(pixel):
     return str(pixel[0]) + "-" + str(pixel[1]) + "-" + str(pixel[2])
 
 
+convert_cache = None
+
+
 def convert(touch_data):
+    global convert_cache
     copy_exp_list = copy.deepcopy(exp_list)
     touch_keys = {exp_image_dict[rgb_str] for i in touch_data if i["p"] for rgb_str in
                   get_colors_in_area(i["x"], i["y"]) if
@@ -208,9 +212,11 @@ def convert(touch_data):
     # touched = sum(1 for i in touch_data if i["p"])
     # print("Touched:", touched)
     touch_keys_list = list(touch_keys)
-    copy_exp_list = [[1 if item in touch_keys_list else 0 for item in sublist] for sublist in copy_exp_list]
-    # print(copy_exp_list)
-    serial_manager.change_touch(copy_exp_list, touch_keys_list)
+    if not convert_cache == touch_keys_list:
+        copy_exp_list = [[1 if item in touch_keys_list else 0 for item in sublist] for sublist in copy_exp_list]
+        # print(copy_exp_list)
+        serial_manager.change_touch(copy_exp_list, touch_keys_list)
+        convert_cache = touch_keys_list
 
 
 # def convert(touch_data):
@@ -292,6 +298,11 @@ def getevent():
                 else:
                     touch_data[touch_index]['p'] = True
                     touch_sum += 1
+            elif event_type == 'BTN_TOUCH':
+                if event_value == 'UP':
+                    touch_data = [{"p": False, "x": 0, "y": 0} for _ in range(MAX_SLOT)]
+                    key_is_changed = True
+                    # 清空所有输出
             else:
                 continue
         except Exception:
