@@ -2,6 +2,31 @@
 
 使用 `adb shell getevent` 记录 Android 设备触屏事件并模拟 maimai 触摸屏幕的脚本.
 
+## 提示
+
+玩具项目, 仅在 Xiaomi Pad 5 Pro (Android 13) 上通过测试,
+且仅适配了 Linux 多点触控协议类型 B .
+
+目前已知的问题有:
+
+- 仅支持 Linux 多点触控协议类型 B 而不支持 A (#6), 这可能会导致较旧的设备不受支持,
+  两种类型不同之处详见[文档](https://www.kernel.org/doc/Documentation/input/multi-touch-protocol.txt)
+- 输出 Touch Keys 但无按键按下(分辨率问题)
+- 游戏内按两下只识别一个tap(脚本未进入运行模式)
+- 游戏内始终显示按下(未知原因)
+
+本人暂无时间去修复存在的 Bug, 对于 open issue 和B站私信问题的很抱歉本人无法进行答复,
+有能力的可以自行修复, 也欢迎提交PR.
+
+另外本项目使用了效率较为低下且抽象的方案(Python+读图+串流), 存在延迟等问题, 由于本身是娱乐项目故未做优化.
+
+更加优秀的项目有:
+
+- [AstroDX](https://github.com/2394425147/astrodx)
+- [MajdataPlay](https://github.com/LingFeng-bbben/MajdataPlay)
+
+这些项目包含对 Mai2 Chart Player 的完整实现, 而不仅仅是一个触摸输入程序.
+
 ## 使用方法
 
 1. 请先将游戏配置文件中 `DummyTouchPanel` 的值改为 `0`
