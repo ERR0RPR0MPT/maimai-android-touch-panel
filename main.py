@@ -52,12 +52,12 @@ exp_image_dict = {'41-65-93': 'A1', '87-152-13': 'A2', '213-109-81': 'A3', '23-2
 
 
 class SerialManager:
-    p1Serial = serial.Serial(COM_PORT, COM_BAUDRATE)
-    settingPacket = bytearray([40, 0, 0, 0, 0, 41])
-    startUp = False
-    recvData = ""
-
     def __init__(self):
+        self.p1Serial = serial.Serial(COM_PORT, COM_BAUDRATE)
+        self.settingPacket = bytearray([40, 0, 0, 0, 0, 41])
+        self.startUp = False
+        self.recvData = ""
+
         self.touchQueue = queue.Queue()
         self.data_lock = threading.Lock()
         self.touchThread = threading.Thread(target=self.touch_thread)
@@ -65,6 +65,7 @@ class SerialManager:
         self.now_touch_data = b''
         self.now_touch_keys = []
         self.ping_touch_thread()
+
 
     def start(self):
         print(f"开始监听 {COM_PORT} 串口...")
