@@ -13,7 +13,7 @@ import sys
 # 编辑好的图片路径
 IMAGE_PATH = "./image/image_monitor.png"
 # 串口号
-COM_PORT = "COM44"
+COM_PORT = "COM33"
 # 比特率
 COM_BAUDRATE = 9600
 # Android 多点触控数量
