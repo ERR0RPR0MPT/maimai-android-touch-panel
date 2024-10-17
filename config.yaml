@@ -20,6 +20,8 @@ ANDROID_REVERSE_MONITOR: false
 TOUCH_THREAD_SLEEP_MODE: false
 # 每次 sleep 的延迟, 单位: 微秒, 默认 100 微秒
 TOUCH_THREAD_SLEEP_DELAY: 100
+#当需要指定触控设备时填上使用“adb devices”获取到的设备序列号，留空则只支持单设备连接
+SPECIFIED_DEVICES: ""
 
 # RGB 颜色值对应区块配置
 exp_image_dict:
