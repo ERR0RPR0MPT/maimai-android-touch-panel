@@ -32,6 +32,8 @@ ANDROID_REVERSE_MONITOR = False
 TOUCH_THREAD_SLEEP_MODE = False
 # 每次 sleep 的延迟, 单位: 微秒, 默认 100 微秒
 TOUCH_THREAD_SLEEP_DELAY = 100
+#当需要指定触控设备时填上使用“adb devices”获取到的设备序列号，留空则只支持单设备连接
+SPECIFIED_DEVICES = ""
 
 exp_list = [
     ["A1", "A2", "A3", "A4", "A5", ],
@@ -251,7 +253,10 @@ def getevent():
     touch_index = 0
 
     # 执行 adb shell getevent 命令并捕获输出
-    process = subprocess.Popen(['adb', 'shell', 'getevent', '-l'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    adb_cmd = 'adb shell getevent -l'
+    if SPECIFIED_DEVICES:
+        adb_cmd = 'adb -s ' + SPECIFIED_DEVICES + ' shell getevent -l'
+    process = subprocess.Popen(adb_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     key_is_changed = False
 
     # 读取实时输出
@@ -324,6 +329,7 @@ if __name__ == "__main__":
         TOUCH_THREAD_SLEEP_MODE = c["TOUCH_THREAD_SLEEP_MODE"]
         TOUCH_THREAD_SLEEP_DELAY = c["TOUCH_THREAD_SLEEP_DELAY"]
         exp_image_dict = c["exp_image_dict"]
+        SPECIFIED_DEVICES = c["SPECIFIED_DEVICES"]
     else:
         print("未找到配置文件, 使用默认配置")
 
