@@ -32,6 +32,8 @@ ANDROID_REVERSE_MONITOR = False
 TOUCH_THREAD_SLEEP_MODE = False
 # 每次 sleep 的延迟, 单位: 微秒, 默认 100 微秒
 TOUCH_THREAD_SLEEP_DELAY = 100
+#当需要指定触控设备时填上使用“adb devices”获取到的设备序列号，留空则只支持单设备连接
+SPECIFIED_DEVICES = ""
 
 exp_list = [
     ["A1", "A2", "A3", "A4", "A5", ],
@@ -52,12 +54,14 @@ exp_image_dict = {'41-65-93': 'A1', '87-152-13': 'A2', '213-109-81': 'A3', '23-2
 
 
 class SerialManager:
-    p1Serial = serial.Serial(COM_PORT, COM_BAUDRATE)
-    settingPacket = bytearray([40, 0, 0, 0, 0, 41])
-    startUp = False
-    recvData = ""
 
+       
     def __init__(self):
+        self.p1Serial = serial.Serial(COM_PORT, COM_BAUDRATE)
+        self.settingPacket = bytearray([40, 0, 0, 0, 0, 41])
+        self.startUp = False
+        self.recvData = ""
+
         self.touchQueue = queue.Queue()
         self.data_lock = threading.Lock()
         self.touchThread = threading.Thread(target=self.touch_thread)
@@ -249,54 +253,58 @@ def getevent():
     touch_index = 0
 
     # 执行 adb shell getevent 命令并捕获输出
-    process = subprocess.Popen(['adb', 'shell', 'getevent', '-l'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    adb_cmd = 'adb shell getevent -l'
+    if SPECIFIED_DEVICES:
+        adb_cmd = 'adb -s ' + SPECIFIED_DEVICES + ' shell getevent -l'
+    process = subprocess.Popen(adb_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     key_is_changed = False
 
     # 读取实时输出
     for line in iter(process.stdout.readline, b''):
         try:
+            
             event = line.decode('utf-8').strip()
-            _, _, event_type, event_value = event.split()
-            # print(event_type, int(event_value, 16))
+            parts = event.split()
+
+            # 屏蔽没用的东西
+            if len(parts) < 4:
+                continue
+            
+            event_type = parts[2]
+            event_value_hex = parts[3]
+            event_value = int(event_value_hex, 16)
+
             if event_type == 'ABS_MT_POSITION_X':
                 key_is_changed = True
-                if not ANDROID_REVERSE_MONITOR:
-                    touch_data[touch_index]["x"] = int(int(event_value, 16) * abs_multi_x)
-                else:
-                    touch_data[touch_index]["x"] = ANDROID_ABS_MONITOR_SIZE[0] - int(int(event_value, 16) * abs_multi_x)
+                touch_data[touch_index]["x"] = (ANDROID_ABS_MONITOR_SIZE[0] - event_value * abs_multi_x) if ANDROID_REVERSE_MONITOR else event_value * abs_multi_x
+
             elif event_type == 'ABS_MT_POSITION_Y':
                 key_is_changed = True
-                if not ANDROID_REVERSE_MONITOR:
-                    touch_data[touch_index]["y"] = int(int(event_value, 16) * abs_multi_y)
-                else:
-                    touch_data[touch_index]["y"] = ANDROID_ABS_MONITOR_SIZE[1] - int(int(event_value, 16) * abs_multi_y)
+                touch_data[touch_index]["y"] = (ANDROID_ABS_MONITOR_SIZE[1] - event_value * abs_multi_y) if ANDROID_REVERSE_MONITOR else event_value * abs_multi_y
+
             elif event_type == 'SYN_REPORT':
-                if not key_is_changed:
-                    continue
-                # print("Touch Data:", touch_data)
-                # 向 convert 函数发送数据
-                key_is_changed = False
-                # start_time = time.perf_counter()
-                convert(touch_data)
-                # print("单次执行时间:", (time.perf_counter() - start_time) * 1e3, "毫秒")
+                if key_is_changed:
+                    convert(touch_data)
+                    key_is_changed = False
+
             elif event_type == 'ABS_MT_SLOT':
                 key_is_changed = True
-                touch_index = int(event_value, 16)
+                touch_index = event_value
                 if touch_index >= touch_sum:
                     touch_sum = touch_index + 1
+
             elif event_type == 'ABS_MT_TRACKING_ID':
                 key_is_changed = True
-                if event_value == "ffffffff":
+                if event_value_hex == "ffffffff":
                     touch_data[touch_index]['p'] = False
                     touch_sum = max(0, touch_sum - 1)
                 else:
                     touch_data[touch_index]['p'] = True
                     touch_sum += 1
-            else:
-                continue
-        except Exception:
+
+        except Exception as e:
             event_error_output = line.decode('utf-8')
-            if "name" in event_error_output:
+            if "name" not in event_error_output:
                 continue
             print(event_error_output)
 
@@ -321,6 +329,7 @@ if __name__ == "__main__":
         TOUCH_THREAD_SLEEP_MODE = c["TOUCH_THREAD_SLEEP_MODE"]
         TOUCH_THREAD_SLEEP_DELAY = c["TOUCH_THREAD_SLEEP_DELAY"]
         exp_image_dict = c["exp_image_dict"]
+        SPECIFIED_DEVICES = c["SPECIFIED_DEVICES"]
     else:
         print("未找到配置文件, 使用默认配置")
 
@@ -330,6 +339,7 @@ if __name__ == "__main__":
     abs_multi_y = ANDROID_ABS_MONITOR_SIZE[1] / ANDROID_ABS_INPUT_SIZE[1]
     print("当前触控区域X轴放大倍数:", abs_multi_x)
     print("当前触控区域Y轴放大倍数:", abs_multi_y)
+    print("当前链接到端口：", COM_PORT)
     print(('已' if ANDROID_REVERSE_MONITOR else '未') + "开启屏幕反转")
     serial_manager = SerialManager()
     serial_manager.start()
