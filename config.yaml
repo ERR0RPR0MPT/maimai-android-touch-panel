@@ -11,9 +11,9 @@ AREA_SCOPE: 50
 # 检测区域圆上点的数量
 AREA_POINT_NUM: 8
 # Android 设备实际屏幕大小 (单位:像素)
-ANDROID_ABS_MONITOR_SIZE: [ 1600, 2560 ]
+ANDROID_ABS_MONITOR_SIZE: [ 1800, 2880 ]
 # Android 设备触控屏幕大小 (单位:像素)
-ANDROID_ABS_INPUT_SIZE: [ 1600, 2560 ]
+ANDROID_ABS_INPUT_SIZE: [ 18000, 28800 ]
 # 是否开启屏幕反转(充电口朝上时开启该配置)
 ANDROID_REVERSE_MONITOR: false
 # touch_thread 是否启用sleep, 默认关闭, 如果程序 CPU 占用较高则开启, 如果滑动时延迟极大请关闭
