@@ -3,8 +3,10 @@
 使用 `adb shell getevent` 记录 Android 设备触屏事件并模拟 maimai 触摸屏幕的脚本.
 
 ## 提示
+非常感谢原作者提供的脚本，針對小米平板6 Pro進行了优化，同时提供紧凑模式设置以避免中途破防？
 
-玩具项目, 仅在 Xiaomi Pad 5 Pro (Android 13) 上通过测试,
+
+玩具项目, ~~仅在 Xiaomi Pad 5 Pro (Android 13) 上通过测试~~,
 且仅适配了 Linux 多点触控协议类型 B .
 
 目前已知的问题有:
@@ -75,13 +77,14 @@ A: 按步骤修改脚本内 `ANDROID_ABS_MONITOR_SIZE` 和 `ANDROID_ABS_INPUT_SI
 
 Q: 关闭再打开报错
 
-A: 如果直接关闭控制台窗口有可能导致后台进程残留，请使用任务管理器彻底关闭进程或者使用Ctrl+C终止程序
+A: 如果直接关闭控制台窗口有可能导致后台进程残留，请使用任务管理器彻底关闭进程或者使用 Ctrl + C 终止程序
 
 ## 注意
 
-想要加 2P 的重新复制一下脚本并添加串口 COM4 到 COM44 的转发，并且在配置文件“SPECIFIED_DEVICES”中指定使用“adb devices”获取到的设备序列号
+想要加 2P 的重新复制一下脚本并添加串口 COM4 到 COM44 的转发，并且在配置文件 “SPECIFIED_DEVICES” 中指定使用 “adb devices” 获取到的设备序列号
 
-该脚本仅用于测试, 目前来说打 12+及以下应该是问题不大, 12+以上水平不够没试过.
+~~该脚本仅用于测试，目前来说打 12+ 及以下应该是问题不大，12+ 以上水平不够没试过.~~
+本人测试后，打 12 也可以鸟加，13+ 以上开始容易断，需要在之后进行更好的优化。
 
 ## 类似项目
 
@@ -90,9 +93,3 @@ A: 如果直接关闭控制台窗口有可能导致后台进程残留，请使�
 ## 许可证
 
 [MIT License](https://github.com/ERR0RPR0MPT/maimai-android-touch-panel?tab=MIT-1-ov-file)
-
-## 其他
-
-编辑好的区块成品图类似这样:
-
-![](https://raw.githubusercontent.com/ERR0RPR0MPT/maimai-android-touch-panel/main/image/image_monitor.png)
