@@ -3,7 +3,7 @@
 使用 `adb shell getevent` 记录 Android 设备触屏事件并模拟 maimai 触摸屏幕的脚本.
 
 ## 提示
-非常感谢原作者提供的脚本，針對小米平板6 Pro進行了优化，同时提供紧凑模式设置以避免中途破防？
+非常感谢原作者提供的脚本，本 fork 針對为小米平板6 Pro進行了更好的优化，同时提供紧凑模式设置以避免滑到底栏而中途破防？
 
 
 玩具项目，~~仅在 Xiaomi Pad 5 Pro (Android 13) 上通过测试~~,
@@ -44,11 +44,11 @@
 9. 编辑 `config.yaml` 配置文件，按文件内说明修改多个配置
 10. 下载一个 `VSPD` 虚拟串口工具，将 `COM3` 和 `COM33` 建立转发
 11. 手机打开 USB 调试，强烈建议同时使用 USB 网络共享连接电脑，串流走 WLAN 可能不是很稳定
-12. 电脑画面可使用 `IddSampleDriver`，`Sunshine` 和 `Moonlight` (提一嘴:想要竖屏串流必须使用支持竖屏的 Sunshine Nightly 版本，[Releases 地址](https://github.com/LizardByte/Sunshine/releases/nightly-dev))或者延迟较大但比较方便的 `spacedesk` 等软件串流到 Android设备,详细过程请自行寻找，不在本篇讨论范围之内
+12. 电脑画面可使用 `Apollo`，`IddSampleDriver`，`Sunshine` 和 `Moonlight` 或者延迟较大但比较方便的 `spacedesk` 等软件串流到 Android 设备，详细过程请自行寻找，不在本篇讨论范围之内
 13. 手机连接电脑，先双击运行 `start.bat`，再运行游戏，脚本控制台输出 `已连接到游戏` 即可
 14. 进游戏调整延迟，一般判定 A/B 都要调才能正常用，我这边是 `A:-1.0/B:+0.5` 到 `A:-2.0/B:+2.0`
 15. 打一把看看蹭不蹭星星/触控是否灵敏，根据体验修改 `AREA_SCOPE` 变量 c'c'x'c'c'z'z'z'z'd'd'd'd'c'x
-16. 如果单点延迟低但滑动时延迟极大，请将脚本中 `TOUCH_THREAD_SLEEP_MODE` 修改为 false，或者可以调小 `TOUCH_THREAD_SLEEP_DELAY` 的值(如果还是卡请提 issue 反馈)
+16. 如果单点延迟低但滑动时延迟极大，请将脚本中 `TOUCH_THREAD_SLEEP_MODE` 修改为 false，或者可以调小 `TOUCH_THREAD_SLEEP_DELAY` 的值(如果还是卡请提交 issue 反馈)
 
 
 ## 命令列表
@@ -76,7 +76,7 @@ A: 如果直接关闭控制台窗口有可能导致后台进程残留，请使�
 想要加 2P 的重新复制一下脚本并添加串口 COM4 到 COM44 的转发，并且在配置文件 “SPECIFIED_DEVICES” 中指定使用 “adb devices” 获取到的设备序列号
 
 ~~该脚本仅用于测试，目前来说打 12+ 及以下应该是问题不大，12+ 以上水平不够没试过.~~
-本人测试后，打 12 也可以鸟加，13+ 以上开始容易断，需要在之后进行更好的优化。
+本人测试后，打 12-13 也可以鸟加，13+ 以上开始容易断，需要在之后进行更好的优化。
 
 ## 类似项目
 
