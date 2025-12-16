@@ -59,17 +59,19 @@
 
 输入 `restart` 可重新读取配置文件/重启脚本
 
+输入 `exit` 可完全退出脚本
+
 ## 部分问题
 
 关于延迟/其他建议可参考 [#3](https://github.com/ERR0RPR0MPT/maimai-android-touch-panel/issues/3)
 
-Q: 在安卓高版本(13,14)上测试触摸区域完全对不上，只有点屏幕左上角有用，图片用的是平板实际分辨率，在一台安卓 10 设备测试是正常的
+Q：在安卓高版本(13,14)上测试触摸区域完全对不上，只有点屏幕左上角有用，图片用的是平板实际分辨率，在一台安卓 10 设备测试是正常的
 
-A: 按步骤修改脚本内 `ANDROID_ABS_MONITOR_SIZE` 和 `ANDROID_ABS_INPUT_SIZE` 配置
+A：按步骤修改脚本内 `ANDROID_ABS_MONITOR_SIZE` 和 `ANDROID_ABS_INPUT_SIZE` 配置
 
-Q: 关闭再打开报错
+Q：关闭再打开报错
 
-A: 如果直接关闭控制台窗口有可能导致后台进程残留，请使用任务管理器彻底关闭进程或者使用 Ctrl + C 终止程序
+A：如果直接关闭控制台窗口有可能导致后台进程残留，请使用任务管理器彻底关闭进程或者使用 Ctrl + C 终止程序，也可以在退出前输入 `exit` 。
 
 ## 注意
 
@@ -85,3 +87,9 @@ A: 如果直接关闭控制台窗口有可能导致后台进程残留，请使�
 ## 许可证
 
 [MIT License](https://github.com/ERR0RPR0MPT/maimai-android-touch-panel?tab=MIT-1-ov-file)
+
+## 其他
+
+编辑好的区块成品图类似这样：
+
+![](https://raw.githubusercontent.com/ERR0RPR0MPT/maimai-android-touch-panel/main/image/image_monitor.png)
