@@ -1,34 +1,32 @@
 # maimai-android-touch-panel
 
+[English](README_en-US.md) | 简体中文
+
 使用 `adb shell getevent` 记录 Android 设备触屏事件并模拟 maimai 触摸屏幕的脚本.
 
 ## 提示
-非常感谢原作者提供的脚本，本 fork 針對为小米平板6 Pro進行了更好的优化，同时提供紧凑模式设置以避免滑到底栏而中途破防？
-
-
-玩具项目，~~仅在 Xiaomi Pad 5 Pro (Android 13) 上通过测试~~,
-且仅适配了 Linux 多点触控协议类型 B .
+玩具项目，在 Xiaomi Pad 5 Pro (Android 13) 及 Xiaomi Pad 6 Pro (Android 15) 上做了测试，且仅适配了 Linux 多点触控协议类型 B。
 
 目前已知的问题有:
 
-- 仅支持 Linux 多点触控协议类型 B 而不支持 A (#6)，这可能会导致较旧的设备不受支持,
+- 仅支持 Linux 多点触控协议类型 B 而不支持 A (#6)，这可能会导致较旧的设备不受支持，
   两种类型不同之处详见[文档](https://www.kernel.org/doc/Documentation/input/multi-touch-protocol.txt)
-- 输出 Touch Keys 但无按键按下(分辨率问题)
-- 游戏内按两下只识别一个 tap(脚本未进入运行模式)
-- 游戏内始终显示按下(未知原因)
+- 输出 Touch Keys 但无按键按下（分辨率问题）
+- 游戏内按两下只识别一个 tap（脚本未进入运行模式）
+- 游戏内始终显示按下（未知原因）
 
 本人暂无时间去修复存在的 Bug，对于 open issue 和 B 站私信问题的很抱歉本人无法进行答复,
 有能力的可以自行修复，也欢迎提交 PR.
 
-另外本项目使用了效率较为低下且抽象的方案(Python+读图+串流)，存在延迟等问题，由于本身是娱乐项目故未做优化.
+另外本项目使用了效率较为低下且抽象的方案（Python + 读图 + 串流），存在延迟等问题，由于本身是娱乐项目故未做优化.
 
-更加优秀的项目有:
+更加优秀的项目有：
 
 - [KanadeDX](https://github.com/KanadeDX/Public) (某八个按键程序在 Android/iOS 上的实现)
 - [AstroDX](https://github.com/2394425147/astrodx) (Android，Windows?)
 - [MajdataPlay](https://github.com/LingFeng-bbben/MajdataPlay) (Windows，Android?)
 
-这些项目包含对 Mai2 Chart Player 的完整实现，而不仅仅是一个触摸输入程序.
+这些项目包含对 Mai2 Chart Player 的完整实现，而不仅仅是一个触摸输入程序。
 
 ## 使用方法
 
@@ -48,7 +46,7 @@
 13. 手机连接电脑，先双击运行 `start.bat`，再运行游戏，脚本控制台输出 `已连接到游戏` 即可
 14. 进游戏调整延迟，一般判定 A/B 都要调才能正常用，我这边是 `A:-1.0/B:+0.5` 到 `A:-2.0/B:+2.0`
 15. 打一把看看蹭不蹭星星/触控是否灵敏，根据体验修改 `AREA_SCOPE` 变量 c'c'x'c'c'z'z'z'z'd'd'd'd'c'x
-16. 如果单点延迟低但滑动时延迟极大，请将脚本中 `TOUCH_THREAD_SLEEP_MODE` 修改为 false，或者可以调小 `TOUCH_THREAD_SLEEP_DELAY` 的值(如果还是卡请提交 issue 反馈)
+16. 如果单点延迟低但滑动时延迟极大，请将脚本中 `TOUCH_THREAD_SLEEP_MODE` 修改为 false，或者可以调小 `TOUCH_THREAD_SLEEP_DELAY` 的值（如果还是卡请提交 issue 反馈）
 
 
 ## 命令列表
@@ -65,7 +63,7 @@
 
 关于延迟/其他建议可参考 [#3](https://github.com/ERR0RPR0MPT/maimai-android-touch-panel/issues/3)
 
-Q：在安卓高版本(13,14)上测试触摸区域完全对不上，只有点屏幕左上角有用，图片用的是平板实际分辨率，在一台安卓 10 设备测试是正常的
+Q：在安卓高版本(13-15)上测试触摸区域完全对不上，只有点屏幕左上角有用，图片用的是平板实际分辨率，在一台安卓 10 设备测试是正常的
 
 A：按步骤修改脚本内 `ANDROID_ABS_MONITOR_SIZE` 和 `ANDROID_ABS_INPUT_SIZE` 配置
 
@@ -77,8 +75,7 @@ A：如果直接关闭控制台窗口有可能导致后台进程残留，请使�
 
 想要加 2P 的重新复制一下脚本并添加串口 COM4 到 COM44 的转发，并且在配置文件 “SPECIFIED_DEVICES” 中指定使用 “adb devices” 获取到的设备序列号
 
-~~该脚本仅用于测试，目前来说打 12+ 及以下应该是问题不大，12+ 以上水平不够没试过.~~
-本人测试后，打 12-13 也可以鸟加，13+ 以上开始容易断，需要在之后进行更好的优化。
+该脚本仅用于测试，目前来说打 12-13 也可以鸟加，13+ 以上开始容易断，需要在之后进行更好的优化。
 
 ## 类似项目
 
