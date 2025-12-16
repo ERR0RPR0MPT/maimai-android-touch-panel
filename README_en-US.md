@@ -40,7 +40,7 @@ These projects include complete implementations of Mai2 Chart Player, not just a
 8. Android devices with charging port facing down are generally in normal screen orientation. If you need to play with reversed screen, change the `ANDROID_REVERSE_MONITOR` configuration to true
 9. Edit the `config.yaml` configuration file and modify multiple configurations according to the instructions in the file
 10. Download a `VSPD` virtual serial port tool and establish forwarding between `COM3` and `COM33`
-11. Enable USB debugging on your phone. Strongly recommend using USB network tethering to connect to the computer, as streaming over WLAN may not be very stable
+11. Enable USB debugging on your phone. Strongly recommend using USB network tethering to connect to the computer, as streaming over WLAN may not be very stable and increase latency
 12. You can stream the computer screen to Android devices using software like `Apollo`, `IddSampleDriver`, `Sunshine` and `Moonlight`, or the more convenient but higher latency `spacedesk`. Please find the detailed process on your own, as it's not within the scope of this discussion
 13. Connect your phone to the computer, first double-click `start.bat`, then run the game. When the script console outputs `已连接到游戏` (Connected to game), you're ready
 14. Adjust the delay in-game. Generally, both judgment A/B need adjustment to work properly. For me, it's `A:-1.0/B:+0.5` to `A:-2.0/B:+2.0`
