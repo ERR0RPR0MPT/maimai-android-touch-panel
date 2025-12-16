@@ -1,29 +1,40 @@
-# 编辑好的图片路径
+# 编辑好的图片路径 Image path
 IMAGE_PATH: "./image/image_monitor.png"
-# 串口号
+
+# 串口号 Communication port
 COM_PORT: "COM33"
-# 比特率
+
+# 比特率 Baud rate
 COM_BAUDRATE: 9600
-# Android 多点触控数量
+
+# Android 多点触控数量 Multi-touch amount
 MAX_SLOT: 12
-# 检测区域的像素值范围
-AREA_SCOPE: 50
-# 检测区域圆上点的数量
+
+# 检测区域的像素值范围 Detection area size (Pixel)
+AREA_SCOPE: 70
+
+# 检测区域圆上点的数量 Amount of points in detection area
 AREA_POINT_NUM: 8
-# Android 设备实际屏幕大小 (单位:像素)
+
+# Android 设备实际屏幕大小（单位:像素）Actual screen dimensions (Pixel)
 ANDROID_ABS_MONITOR_SIZE: [ 1800, 2880 ]
-# Android 设备触控屏幕大小 (单位:像素)
+
+# Android 设备触控屏幕大小（单位:像素）Touch screen dimensions (Pixel)
 ANDROID_ABS_INPUT_SIZE: [ 18000, 28800 ]
-# 是否开启屏幕反转(充电口朝上时开启该配置)
+
+# 是否开启屏幕反转（充电口朝上时开启该配置）Rotate the screen 180 degree (Default face charging port)
 ANDROID_REVERSE_MONITOR: false
-# touch_thread 是否启用sleep, 默认关闭, 如果程序 CPU 占用较高则开启, 如果滑动时延迟极大请关闭
+
+# touch_thread 是否启用 sleep, 默认关闭, 如果程序 CPU 占用较高则开启, 如果滑动时延迟极大请关闭 Sleep mode (Turn on if you think the CPU usage is too high, turn off if you feel swipe is delayed)
 TOUCH_THREAD_SLEEP_MODE: false
-# 每次 sleep 的延迟, 单位: 微秒, 默认 100 微秒
-TOUCH_THREAD_SLEEP_DELAY: 100
-#当需要指定触控设备时填上使用“adb devices”获取到的设备序列号，留空则只支持单设备连接
+
+# 每次 sleep 的延迟, 单位: 微秒, 默认 100 微秒 Sleep delay ms (Default: 100)
+TOUCH_THREAD_SLEEP_DELAY: 50
+
+# 当需要指定触控设备时填上使用 “adb devices” 获取到的设备序列号，留空则只支持单设备连接 Specify adb devices (Use if you have mulitple, other wise leave if empty)
 SPECIFIED_DEVICES: ""
 
-# RGB 颜色值对应区块配置
+# RGB 颜色值对应区块配置（不建议更改）RGB color detection settings (Not recommended to change)
 exp_image_dict:
   '41-65-93': A1
   '87-152-13': A2
