@@ -178,7 +178,7 @@ def restart_script():
     print("正在重启...")
     serial_manager.stop()
     python = sys.executable
-    os.execv(python, [python] + sys.argv[1:])
+    os.execv(python, [python] + sys.argv)
 
 
 def microsecond_sleep(sleep_time):
