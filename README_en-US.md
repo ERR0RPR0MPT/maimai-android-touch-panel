@@ -44,7 +44,7 @@ These projects include complete implementations of Mai2 Chart Player, not just a
 12. You can stream the computer screen to Android devices using software like `Apollo`, `IddSampleDriver`, `Sunshine` and `Moonlight`, or the more convenient but higher latency `spacedesk`. Please find the detailed process on your own, as it's not within the scope of this discussion
 13. Connect your phone to the computer, first double-click `start.bat`, then run the game. When the script console outputs `已连接到游戏` (Connected to game), you're ready
 14. Adjust the delay in-game. Generally, both judgment A/B need adjustment to work properly. For me, it's `A:-1.0/B:+0.5` to `A:-2.0/B:+2.0`
-15. Play a round to see if you're missing stars / if touch is responsive. Modify the `AREA_SCOPE` variable based on your experience
+15. Play a round to see if you're missing any slides / if touch is responsive. Modify the `AREA_SCOPE` variable based on your experience
 16. If single-point latency is low but sliding has extremely high latency, change `TOUCH_THREAD_SLEEP_MODE` in the script to false, or you can decrease the value of `TOUCH_THREAD_SLEEP_DELAY` (if it's still laggy, please submit an issue for feedback)
 
 ## Command List

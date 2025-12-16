@@ -16,13 +16,13 @@ AREA_SCOPE: 50
 # 检测区域圆上点的数量 | Number of points in detection area circle
 AREA_POINT_NUM: 8
 
-# Android 设备实际屏幕大小（单位:像素） | Actual screen size (pixels)
+# Android 设备实际屏幕大小(单位:像素) | Actual screen size (pixels)
 ANDROID_ABS_MONITOR_SIZE: [ 1600, 2560 ]
 
-# Android 设备触控屏幕大小（单位:像素） | Touch input size (pixels)
+# Android 设备触控屏幕大小(单位:像素) | Touch input size (pixels)
 ANDROID_ABS_INPUT_SIZE: [ 1600, 2560 ]
 
-# 是否开启屏幕反转（充电口朝上时开启该配置） | Rotate screen 180 degrees (enable when charging port faces up)
+# 是否开启屏幕反转(充电口朝上时开启该配置) | Rotate screen 180 degrees (enable when charging port faces up)
 ANDROID_REVERSE_MONITOR: false
 
 # touch_thread 是否启用 sleep, 默认关闭, 如果程序 CPU 占用较高则开启, 如果滑动时延迟极大请关闭 | Enable sleep mode (turn on if CPU usage is too high, turn off if swipe feels laggy)
@@ -31,7 +31,7 @@ TOUCH_THREAD_SLEEP_MODE: false
 # 每次 sleep 的延迟，单位: 微秒，默认 100 微秒 | Sleep delay in microseconds (default: 100)
 TOUCH_THREAD_SLEEP_DELAY: 100
 
-# microsecond_sleep 时间补偿值，需要根据自己PC的性能去实测，默认 1.0 | Time compensation for microsecond sleep, needs calibration based on PC performance (default: 1.0)
+# microsecond_sleep 时间补偿值，需要根据自己电脑的性能去实测，默认 1.0 | Time compensation for microsecond sleep, needs calibration based on PC performance (default: 1.0)
 TIME_COMPENSATION: 1.0
 
 # 当需要指定触控设备时填上使用 "adb devices" 获取到的设备序列号，留空则只支持单设备连接 | Specify ADB device serial number (use "adb devices" to find it; leave empty for single device)
@@ -39,7 +39,7 @@ SPECIFIED_DEVICES: ""
 
 
 
-# RGB 颜色值对应区块配置（不建议更改） | RGB color to zone mapping (not recommended to modify)
+# RGB 颜色值对应区块配置(不建议更改) | RGB color to zone mapping (not recommended to modify)
 exp_image_dict:
   '41-65-93': A1
   '87-152-13': A2

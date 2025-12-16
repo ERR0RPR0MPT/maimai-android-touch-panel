@@ -32,7 +32,7 @@ ANDROID_REVERSE_MONITOR = False
 TOUCH_THREAD_SLEEP_MODE = False
 # 每次 sleep 的延迟, 单位: 微秒, 默认 100 微秒
 TOUCH_THREAD_SLEEP_DELAY = 100
-# microsecond_sleep 时间补偿值，需要根据自己PC的性能去实测
+# microsecond_sleep 时间补偿值，需要根据自己电脑的性能去实测
 TIME_COMPENSATION = 1.0
 #当需要指定触控设备时填上使用"adb devices"获取到的设备序列号，留空则只支持单设备连接
 SPECIFIED_DEVICES = ""
