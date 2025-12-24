@@ -32,7 +32,9 @@ ANDROID_REVERSE_MONITOR = False
 TOUCH_THREAD_SLEEP_MODE = False
 # 每次 sleep 的延迟, 单位: 微秒, 默认 100 微秒
 TOUCH_THREAD_SLEEP_DELAY = 100
-#当需要指定触控设备时填上使用“adb devices”获取到的设备序列号，留空则只支持单设备连接
+# 时间补偿值，需要根据自己电脑的性能去实测
+TIME_COMPENSATION = 1.0
+#当需要指定触控设备时填上使用"adb devices"获取到的设备序列号，留空则只支持单设备连接
 SPECIFIED_DEVICES = ""
 
 exp_list = [
@@ -55,17 +57,18 @@ exp_image_dict = {'41-65-93': 'A1', '87-152-13': 'A2', '213-109-81': 'A3', '23-2
 
 class SerialManager:
 
-       
+
     def __init__(self):
         self.p1Serial = serial.Serial(COM_PORT, COM_BAUDRATE)
         self.settingPacket = bytearray([40, 0, 0, 0, 0, 41])
         self.startUp = False
         self.recvData = ""
+        self.exit_flag = False
 
         self.touchQueue = queue.Queue()
         self.data_lock = threading.Lock()
-        self.touchThread = threading.Thread(target=self.touch_thread)
-        self.writeThread = threading.Thread(target=self.write_thread)
+        self.touchThread = threading.Thread(target=self.touch_thread, daemon=True)
+        self.writeThread = threading.Thread(target=self.write_thread, daemon=True)
         self.now_touch_data = b''
         self.now_touch_keys = []
         self.ping_touch_thread()
@@ -79,7 +82,7 @@ class SerialManager:
         self.touchQueue.put([self.build_touch_package(exp_list), []])
 
     def touch_thread(self):
-        while True:
+        while not self.exit_flag:
             # start_time = time.perf_counter()
             if self.p1Serial.is_open:
                 self.read_data(self.p1Serial)
@@ -93,7 +96,7 @@ class SerialManager:
             # print("单次执行时间:", (time.perf_counter() - start_time) * 1e3, "毫秒")
 
     def write_thread(self):
-        while True:
+        while not self.exit_flag:
             # # 延迟匹配波特率
             # time.sleep(0.0075)  # 9600
             # # time.sleep(0.002)  # 115200
@@ -105,9 +108,13 @@ class SerialManager:
             with self.data_lock:
                 self.send_touch(self.p1Serial, self.now_touch_data)
 
-    def destroy(self):
-        self.touchThread.join()
-        self.p1Serial.close()
+    def stop(self):
+        print("正在停止...")
+        self.exit_flag = True
+        time.sleep(0.1)  # 给线程时间退出
+        if self.p1Serial.is_open:
+            self.p1Serial.close()
+        print("已停止")
 
     def read_data(self, ser):
         if ser.in_waiting == 6:
@@ -167,13 +174,15 @@ class SerialManager:
 
 
 def restart_script():
+    """Restart the script with proper cleanup"""
+    print("正在重启...")
+    serial_manager.stop()
     python = sys.executable
-    script = os.path.abspath(sys.argv[0])
-    os.execv(python, [python, script])
+    os.execv(python, [python] + sys.argv)
 
 
 def microsecond_sleep(sleep_time):
-    end_time = time.perf_counter() + (sleep_time - 1.0) / 1e6  # 1.0是时间补偿，需要根据自己PC的性能去实测
+    end_time = time.perf_counter() + (sleep_time - TIME_COMPENSATION) / 1e6  # 时间补偿，需要根据自己PC的性能去实测
     while time.perf_counter() < end_time:
         pass
 
@@ -262,14 +271,14 @@ def getevent():
     # 读取实时输出
     for line in iter(process.stdout.readline, b''):
         try:
-            
+
             event = line.decode('utf-8').strip()
             parts = event.split()
 
             # 屏蔽没用的东西
             if len(parts) < 4:
                 continue
-            
+
             event_type = parts[2]
             event_value_hex = parts[3]
             event_value = int(event_value_hex, 16)
@@ -328,8 +337,9 @@ if __name__ == "__main__":
         ANDROID_REVERSE_MONITOR = c["ANDROID_REVERSE_MONITOR"]
         TOUCH_THREAD_SLEEP_MODE = c["TOUCH_THREAD_SLEEP_MODE"]
         TOUCH_THREAD_SLEEP_DELAY = c["TOUCH_THREAD_SLEEP_DELAY"]
-        exp_image_dict = c["exp_image_dict"]
+        TIME_COMPENSATION = c["TIME_COMPENSATION"]
         SPECIFIED_DEVICES = c["SPECIFIED_DEVICES"]
+        exp_image_dict = c["exp_image_dict"]
     else:
         print("未找到配置文件, 使用默认配置")
 
@@ -343,18 +353,29 @@ if __name__ == "__main__":
     print(('已' if ANDROID_REVERSE_MONITOR else '未') + "开启屏幕反转")
     serial_manager = SerialManager()
     serial_manager.start()
-    threading.Thread(target=getevent).start()
-    while True:
-        input_str = input().strip()
-        if len(input_str) == 0:
-            continue
-        if input_str == 'start':
-            serial_manager.startUp = True
-            print("已连接到游戏")
-        elif input_str == 'reverse':
-            ANDROID_REVERSE_MONITOR = not ANDROID_REVERSE_MONITOR
-            print("已" + ('开启' if ANDROID_REVERSE_MONITOR else '关闭') + "屏幕反转")
-        elif input_str == 'restart':
-            restart_script()
-        else:
-            print("未知的输入")
+    getevent_thread = threading.Thread(target=getevent, daemon=True)
+    getevent_thread.start()
+
+    try:
+        while True:
+            input_str = input().strip()
+            if len(input_str) == 0:
+                continue
+            if input_str == 'start':
+                serial_manager.startUp = True
+                print("已连接到游戏")
+            elif input_str == 'reverse':
+                ANDROID_REVERSE_MONITOR = not ANDROID_REVERSE_MONITOR
+                print("已" + ('开启' if ANDROID_REVERSE_MONITOR else '关闭') + "屏幕反转")
+            elif input_str == 'restart':
+                restart_script()
+            elif input_str == 'exit':
+                print("正在退出")
+                serial_manager.stop()
+                sys.exit(0)
+            else:
+                print("未知的输入")
+    except KeyboardInterrupt:
+        print("\n检测到中断信号")
+        serial_manager.stop()
+        sys.exit(0)
