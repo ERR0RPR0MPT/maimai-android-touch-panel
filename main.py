@@ -175,10 +175,9 @@ class SerialManager:
 
 
 def restart_script():
-    """Restart the script with proper cleanup"""
     print("正在重启...")
     serial_manager.stop()
-    sys.exit(42)  # Exit code 42 signals the launcher to restart
+    sys.exit(42)
 
 
 def microsecond_sleep(sleep_time):
