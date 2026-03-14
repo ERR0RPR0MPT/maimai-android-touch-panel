@@ -10,6 +10,7 @@ import yaml
 import os
 import sys
 
+# 当找不到配置文件时使用的默认配置
 # 编辑好的图片路径
 IMAGE_PATH = "./image/image_monitor.png"
 # 串口号
@@ -177,8 +178,7 @@ def restart_script():
     """Restart the script with proper cleanup"""
     print("正在重启...")
     serial_manager.stop()
-    python = sys.executable
-    os.execv(python, [python] + sys.argv)
+    sys.exit(42)  # Exit code 42 signals the launcher to restart
 
 
 def microsecond_sleep(sleep_time):
