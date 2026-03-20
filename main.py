@@ -10,6 +10,7 @@ import yaml
 import os
 import sys
 
+# 当找不到配置文件时使用的默认配置
 # 编辑好的图片路径
 IMAGE_PATH = "./image/image_monitor.png"
 # 串口号
@@ -174,11 +175,9 @@ class SerialManager:
 
 
 def restart_script():
-    """Restart the script with proper cleanup"""
     print("正在重启...")
     serial_manager.stop()
-    python = sys.executable
-    os.execv(python, [python] + sys.argv)
+    sys.exit(42)
 
 
 def microsecond_sleep(sleep_time):
@@ -361,7 +360,14 @@ if __name__ == "__main__":
             input_str = input().strip()
             if len(input_str) == 0:
                 continue
-            if input_str == 'start':
+            if input_str == 'help':
+                print("可用命令:")
+                print("start   - 手动连接到游戏")
+                print("reverse - 切换屏幕反转")
+                print("restart - 重启脚本")
+                print("exit    - 退出脚本")
+                print("help    - 显示此帮助信息")
+            elif input_str == 'start':
                 serial_manager.startUp = True
                 print("已连接到游戏")
             elif input_str == 'reverse':
@@ -374,7 +380,7 @@ if __name__ == "__main__":
                 serial_manager.stop()
                 sys.exit(0)
             else:
-                print("未知的输入")
+                print("未知的命令，输入 'help' 查看可用命令")
     except KeyboardInterrupt:
         print("\n检测到中断信号")
         serial_manager.stop()
